@@ -9,10 +9,19 @@ let currentColor = "#000000";
 let lineWidth = 4;
 
 const resizeCanvas = () => {
-  const snapshot = context.getImageData(0, 0, canvas.width, canvas.height);
+  const previousWidth = canvas.width;
+  const previousHeight = canvas.height;
+  const snapshot = document.createElement("canvas");
+  snapshot.width = previousWidth;
+  snapshot.height = previousHeight;
+  snapshot.getContext("2d").drawImage(canvas, 0, 0);
+
   canvas.width = canvas.clientWidth;
   canvas.height = canvas.clientHeight;
-  context.putImageData(snapshot, 0, 0);
+  if (previousWidth > 0 && previousHeight > 0) {
+    context.drawImage(snapshot, 0, 0, canvas.width, canvas.height);
+  }
+
   context.lineCap = "round";
   context.lineJoin = "round";
 };
@@ -60,13 +69,15 @@ toolButtons.forEach((button) => {
   button.addEventListener("click", () => {
     currentColor = button.dataset.color;
     lineWidth = 4;
+    context.globalCompositeOperation = "source-over";
     setActiveButton(button);
   });
 });
 
 eraserButton.addEventListener("click", () => {
-  currentColor = "#ffffff";
+  currentColor = "#000000";
   lineWidth = 20;
+  context.globalCompositeOperation = "destination-out";
   setActiveButton(eraserButton);
 });
 
