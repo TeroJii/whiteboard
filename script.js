@@ -75,7 +75,6 @@ toolButtons.forEach((button) => {
 });
 
 eraserButton.addEventListener("click", () => {
-  currentColor = "#000000";
   lineWidth = 20;
   context.globalCompositeOperation = "destination-out";
   setActiveButton(eraserButton);
